@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#2D4739">
+  <title>Mindful Check-in</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(165deg, #FAF6F0 0%, #F5F5DC 50%, rgba(212,196,168,0.25) 100%);
+    }
+    .container {
+      padding: 20px;
+      min-height: 100vh;
+    }
+    .card {
+      max-width: 420px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 4px 24px rgba(45, 71, 57, 0.08), 0 1px 3px rgba(45, 71, 57, 0.04);
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #2D4739 0%, #3A5A40 100%);
+      padding: 28px 24px 24px;
+      color: white;
+    }
+    .header-complete {
+      background: linear-gradient(135deg, #588157 0%, #3A5A40 100%);
+    }
+    .progress-bar {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+    .progress-dot {
+      flex: 1;
+      height: 3px;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.25);
+      transition: all 0.3s ease;
+    }
+    .progress-dot.active {
+      background: rgba(255,255,255,0.9);
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 500;
+      opacity: 0.9;
+      letter-spacing: 0.3px;
+    }
+    .content {
+      padding: 28px 24px 24px;
+    }
+    .label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #588157;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .question {
+      font-size: 22px;
+      font-weight: 600;
+      color: #2D4739;
+      margin-bottom: 24px;
+      line-height: 1.3;
+    }
+    .hint {
+      font-size: 13px;
+      color: #8B7355;
+      margin-bottom: 16px;
+      font-style: italic;
+    }
+    .slider-container {
+      margin-bottom: 32px;
+    }
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 13px;
+      color: #8B7355;
+    }
+    .slider-value-label {
+      font-weight: 600;
+      font-size: 15px;
+    }
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 8px;
+      border-radius: 4px;
+      outline: none;
+      background: linear-gradient(to right, #8B7355 0%, #D4C4A8 50%, #588157 100%);
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #3A5A40;
+      cursor: pointer;
+      border: 3px solid white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #3A5A40;
+      cursor: pointer;
+      border: 3px solid white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .feeling-display {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 48px;
+      font-weight: 300;
+      color: #2D4739;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .btn {
+      padding: 14px 20px;
+      border-radius: 12px;
+      border: 2px solid #D4C4A8;
+      background: white;
+      color: #5C4033;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-family: inherit;
+    }
+    .btn:hover {
+      border-color: #A3B18A;
+    }
+    .btn.selected {
+      border-color: #3A5A40;
+      background: #3A5A40;
+      color: white;
+    }
+    .btn-source {
+      flex-direction: column;
+      padding: 20px 16px;
+      gap: 8px;
+    }
+    .btn-source .icon {
+      font-size: 24px;
+      opacity: 0.8;
+    }
+    .btn-body {
+      justify-content: flex-start;
+      padding: 12px 16px;
+    }
+    .btn-awareness {
+      justify-content: flex-start;
+      padding: 16px 20px;
+    }
+    .btn-awareness .level {
+      width: 50px;
+      font-weight: 700;
+    }
+    .btn-awareness.selected .level {
+      color: white;
+    }
+    .btn-awareness .desc {
+      opacity: 0.7;
+      font-size: 14px;
+    }
+    .btn-life {
+      justify-content: flex-start;
+      padding: 18px 20px;
+    }
+    .btn-life .icon {
+      font-size: 20px;
+      width: 32px;
+    }
+    .btn-other {
+      border-style: dashed;
+    }
+    .btn-tag {
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+    }
+    .tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .selected-display {
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: #FAF6F0;
+      border-radius: 10px;
+      font-size: 14px;
+      color: #2D4739;
+    }
+    .selected-display strong {
+      color: #2D4739;
+    }
+    textarea, input[type="text"] {
+      width: 100%;
+      padding: 16px;
+      border-radius: 12px;
+      border: 2px solid #D4C4A8;
+      font-size: 15px;
+      font-family: inherit;
+      resize: none;
+      outline: none;
+      color: #2D4739;
+      transition: border-color 0.2s ease;
+    }
+    textarea:focus, input[type="text"]:focus {
+      border-color: #3A5A40;
+    }
+    input[type="text"] {
+      padding: 14px 16px;
+      margin-top: 12px;
+    }
+    .inspiration {
+      margin-top: 16px;
+      padding: 16px;
+      background: #FAF6F0;
+      border-radius: 12px;
+      font-size: 14px;
+      color: #8B7355;
+      line-height: 1.5;
+      font-style: italic;
+    }
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 32px;
+      padding-top: 20px;
+      border-top: 1px solid #D4C4A8;
+    }
+    .nav-btn {
+      padding: 14px 28px;
+      border-radius: 12px;
+      border: none;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    .nav-btn-back {
+      background: transparent;
+      color: #588157;
+    }
+    .nav-btn-next {
+      background: #3A5A40;
+      color: white;
+    }
+    .nav-btn-next:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .nav-btn.hidden {
+      visibility: hidden;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 13px;
+      color: #588157;
+      opacity: 0.7;
+    }
+    .summary {
+      background: #FAF6F0;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .summary-title {
+      font-size: 13px;
+      color: #588157;
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    .summary-label {
+      color: #8B7355;
+    }
+    .summary-value {
+      color: #2D4739;
+      font-weight: 500;
+      text-align: right;
+      max-width: 60%;
+    }
+    .summary-section {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid #D4C4A8;
+    }
+    .summary-section-label {
+      font-size: 12px;
+      color: #588157;
+      margin-bottom: 6px;
+    }
+    .summary-section-value {
+      color: #2D4739;
+    }
+    .summary-section-value.italic {
+      font-style: italic;
+    }
+    .complete-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+    .complete-title {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 600;
+    }
+    .btn-new {
+      width: 100%;
+      padding: 16px;
+      border-radius: 12px;
+      border: none;
+      background: #3A5A40;
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .error-msg {
+      margin-top: 16px;
+      padding: 12px;
+      background: #fee;
+      border-radius: 8px;
+      color: #c00;
+      font-size: 14px;
+    }
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="header" id="header">
+        <div class="progress-bar" id="progressBar"></div>
+        <h1>Mindful Check-in</h1>
+      </div>
+      <div class="content" id="content"></div>
+    </div>
+    <div class="footer">Keep calmly knowing change</div>
+  </div>
+
+  <script>
+    // === CONFIGURATION ===
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxslSnoHk67tMm6ITHP_8Pddgd3WRsLr-i6b8b65mDPIf64VX3M3-YCst21wERowro7MA/exec';
+    // =====================
+
+    const sources = [
+      { id: 'see', label: 'Seeing', icon: '◉' },
+      { id: 'hear', label: 'Hearing', icon: '◎' },
+      { id: 'smell', label: 'Smell', icon: '❋' },
+      { id: 'taste', label: 'Taste', icon: '◈' },
+      { id: 'body', label: 'Body', icon: '◯' },
+      { id: 'mind', label: 'Mind', icon: '◇' },
+      { id: 'activity', label: 'Activity', icon: '▢' }
+    ];
+
+    const bodyLocations = [
+      { id: 'head', label: 'Head' },
+      { id: 'throat', label: 'Throat' },
+      { id: 'shoulders', label: 'Shoulders' },
+      { id: 'chest', label: 'Chest' },
+      { id: 'gut', label: 'Gut' },
+      { id: 'back', label: 'Back' },
+      { id: 'limbs', label: 'Limbs' },
+      { id: 'whole', label: 'Whole Body' }
+    ];
+
+    const awarenessLevels = [
+      { value: 10, label: '10%', desc: 'Almost fully caught' },
+      { value: 25, label: '25%', desc: 'Mostly caught, glimpses' },
+      { value: 50, label: '50%', desc: 'Half and half' },
+      { value: 75, label: '75%', desc: 'Mostly aware, some pull' },
+      { value: 90, label: '90%+', desc: 'Clear, watching it all' }
+    ];
+
+    const lifeAreas = [
+      { id: 'love', label: 'Love / Romance', icon: '♡' },
+      { id: 'health', label: 'Health / Vitality', icon: '❧' },
+      { id: 'wealth', label: 'Wealth / Abundance', icon: '✧' },
+      { id: 'music', label: 'Music', icon: '♪' },
+      { id: 'focus', label: 'Focus Cubes / Mission', icon: '◈' },
+      { id: 'wholeness', label: 'Wholeness', icon: '○' }
+    ];
+
+    const reactionTags = ['Fear', 'Anger', 'Wanting', 'Resisting', 'Grasping', 'Judging', 'Worrying', 'Replaying', 'Delight', 'Peace', 'Neutral'];
+
+    let state = {
+      step: 0,
+      feeling: 0,
+      sources: [],
+      bodyLocations: [],
+      customBodyLocation: '',
+      reactionInterpretation: '',
+      percentAware: null,
+      insight: '',
+      choice: '',
+      lifeAreas: [],
+      customLifeArea: '',
+      isSubmitting: false,
+      error: null
+    };
+
+    function getFeelingLabel(v) {
+      if (v <= -7) return 'Intense suffering';
+      if (v <= -4) return 'Very unpleasant';
+      if (v <= -1) return 'Mildly unpleasant';
+      if (v === 0) return 'Neutral';
+      if (v <= 3) return 'Mildly pleasant';
+      if (v <= 6) return 'Pleasant';
+      return 'Deep ease';
+    }
+
+    function getFeelingColor(v) {
+      if (v < -3) return '#8B7355';
+      if (v < 0) return '#A08060';
+      if (v === 0) return '#D4C4A8';
+      if (v < 4) return '#A3B18A';
+      return '#588157';
+    }
+
+    function getSourceLabels() {
+      return state.sources.map(id => sources.find(s => s.id === id)?.label).join(', ');
+    }
+
+    function getBodyLabels() {
+      const labels = state.bodyLocations.filter(id => id !== 'custom').map(id => bodyLocations.find(b => b.id === id)?.label);
+      if (state.bodyLocations.includes('custom') && state.customBodyLocation) labels.push(state.customBodyLocation);
+      return labels.join(', ');
+    }
+
+    function getLifeLabels() {
+      const labels = state.lifeAreas.filter(id => id !== 'custom').map(id => lifeAreas.find(l => l.id === id)?.label);
+      if (state.lifeAreas.includes('custom') && state.customLifeArea) labels.push(state.customLifeArea);
+      return labels.join(', ');
+    }
+
+    function toggle(arr, item) {
+      const i = arr.indexOf(item);
+      if (i > -1) arr.splice(i, 1);
+      else arr.push(item);
+      return arr;
+    }
+
+    function canProceed() {
+      switch(state.step) {
+        case 0: return true;
+        case 1: return state.sources.length > 0;
+        case 2: return state.bodyLocations.length > 0 && (!state.bodyLocations.includes('custom') || state.customBodyLocation.trim());
+        case 3: return state.reactionInterpretation.length > 0;
+        case 4: return state.percentAware !== null;
+        case 5: return true;
+        case 6: return true;
+        case 7: return state.lifeAreas.length > 0 && (!state.lifeAreas.includes('custom') || state.customLifeArea.trim());
+        default: return true;
+      }
+    }
+
+    async function submit() {
+      if (!GOOGLE_SCRIPT_URL) {
+        console.log('No Google Script URL. Data:', state);
+        return true;
+      }
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            dateTime: new Date().toLocaleString(),
+            feeling: state.feeling,
+            source: getSourceLabels(),
+            bodyLocation: getBodyLabels(),
+            reactionInterpretation: state.reactionInterpretation,
+            percentAware: state.percentAware,
+            insight: state.insight,
+            choice: state.choice,
+            lifeArea: getLifeLabels()
+          })
+        });
+        return true;
+      } catch (e) {
+        console.error(e);
+        return false;
+      }
+    }
+
+    function reset() {
+      state = { step: 0, feeling: 0, sources: [], bodyLocations: [], customBodyLocation: '', reactionInterpretation: '', percentAware: null, insight: '', choice: '', lifeAreas: [], customLifeArea: '', isSubmitting: false, error: null };
+    }
+
+    function renderProgress() {
+      const bar = document.getElementById('progressBar');
+      bar.innerHTML = '';
+      for (let i = 0; i < 8; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'progress-dot' + (i <= state.step ? ' active' : '');
+        bar.appendChild(dot);
+      }
+    }
+
+    function render() {
+      const content = document.getElementById('content');
+      const header = document.getElementById('header');
+
+      if (state.step === 'complete') {
+        header.className = 'header header-complete';
+        header.innerHTML = `<div style="text-align:center"><div class="complete-icon">✓</div><h2 class="complete-title">Check-in Complete</h2></div>`;
+        content.innerHTML = `
+          <div class="summary">
+            <div class="summary-title">SUMMARY</div>
+            <div class="summary-row"><span class="summary-label">Feeling</span><span class="summary-value" style="font-weight:600">${state.feeling > 0 ? '+' : ''}${state.feeling}</span></div>
+            <div class="summary-row"><span class="summary-label">Source</span><span class="summary-value">${getSourceLabels()}</span></div>
+            <div class="summary-row"><span class="summary-label">Body</span><span class="summary-value">${getBodyLabels()}</span></div>
+            <div class="summary-row"><span class="summary-label">Awareness</span><span class="summary-value">${state.percentAware}%</span></div>
+            <div class="summary-row"><span class="summary-label">Life Area</span><span class="summary-value">${getLifeLabels()}</span></div>
+            ${state.reactionInterpretation ? `<div class="summary-section"><div class="summary-section-label">REACTION / INTERPRETATION</div><div class="summary-section-value">${state.reactionInterpretation}</div></div>` : ''}
+            ${state.insight ? `<div class="summary-section"><div class="summary-section-label">INSIGHT</div><div class="summary-section-value italic">"${state.insight}"</div></div>` : ''}
+            ${state.choice ? `<div class="summary-section"><div class="summary-section-label">CHOICE</div><div class="summary-section-value">${state.choice}</div></div>` : ''}
+          </div>
+          <button class="btn-new" id="newBtn">New Check-in</button>
+        `;
+        document.getElementById('newBtn').onclick = () => { reset(); header.className = 'header'; header.innerHTML = `<div class="progress-bar" id="progressBar"></div><h1>Mindful Check-in</h1>`; render(); };
+        return;
+      }
+
+      renderProgress();
+      let html = '';
+
+      if (state.step === 0) {
+        html = `
+          <div class="label">Step 1 of 8</div>
+          <div class="question">How does it feel?</div>
+          <div class="slider-container">
+            <div class="slider-labels"><span>-10</span><span class="slider-value-label" id="feelLabel" style="color:${getFeelingColor(state.feeling)}">${getFeelingLabel(state.feeling)}</span><span>+10</span></div>
+            <input type="range" min="-10" max="10" value="${state.feeling}" id="feelSlider">
+            <div class="feeling-display" id="feelDisplay">${state.feeling > 0 ? '+' : ''}${state.feeling}</div>
+          </div>
+        `;
+      } else if (state.step === 1) {
+        html = `
+          <div class="label">Step 2 of 8</div>
+          <div class="question">Where is it coming from?</div>
+          <div class="hint">Select all that apply</div>
+          <div class="grid" id="srcGrid">${sources.map(s => `<button class="btn btn-source ${state.sources.includes(s.id) ? 'selected' : ''}" data-id="${s.id}"><span class="icon">${s.icon}</span><span>${s.label}</span></button>`).join('')}</div>
+          ${state.sources.length ? `<div class="selected-display"><strong>Selected:</strong> ${getSourceLabels()}</div>` : ''}
+        `;
+      } else if (state.step === 2) {
+        html = `
+          <div class="label">Step 3 of 8</div>
+          <div class="question">Where in the body?</div>
+          <div class="hint">Select all that apply</div>
+          <div class="options-list" id="bodyGrid">
+            ${bodyLocations.map(b => `<button class="btn btn-body ${state.bodyLocations.includes(b.id) ? 'selected' : ''}" data-id="${b.id}">${b.label}</button>`).join('')}
+            <button class="btn btn-body btn-other ${state.bodyLocations.includes('custom') ? 'selected' : ''}" data-id="custom">+ Other</button>
+          </div>
+          ${state.bodyLocations.includes('custom') ? `<input type="text" placeholder="Describe the location..." value="${state.customBodyLocation}" id="customBodyIn">` : ''}
+          ${state.bodyLocations.length ? `<div class="selected-display"><strong>Selected:</strong> ${getBodyLabels()}</div>` : ''}
+        `;
+      } else if (state.step === 3) {
+        html = `
+          <div class="label">Step 4 of 8</div>
+          <div class="question">What is the mind doing with this?</div>
+          <div class="tags-container" id="tagsCont">${reactionTags.map(t => `<button class="btn btn-tag ${state.reactionInterpretation.includes(t) ? 'selected' : ''}" data-tag="${t}">${t}</button>`).join('')}</div>
+          <textarea placeholder="The story and the response..." rows="3" id="reactText">${state.reactionInterpretation}</textarea>
+        `;
+      } else if (state.step === 4) {
+        html = `
+          <div class="label">Step 5 of 8</div>
+          <div class="question">How much am I the observer?</div>
+          <div class="options-list" id="awareGrid">${awarenessLevels.map(l => `<button class="btn btn-awareness ${state.percentAware === l.value ? 'selected' : ''}" data-value="${l.value}"><span class="level">${l.label}</span><span class="desc">${l.desc}</span></button>`).join('')}</div>
+        `;
+      } else if (state.step === 5) {
+        html = `
+          <div class="label">Step 6 of 8</div>
+          <div class="question">Is an insight present?</div>
+          <textarea placeholder="The realization, if any..." rows="4" id="insightText">${state.insight}</textarea>
+          <div class="inspiration">"I am awareness" ... "It's ok" ... "This too shall pass" ...</div>
+        `;
+      } else if (state.step === 6) {
+        html = `
+          <div class="label">Step 7 of 8</div>
+          <div class="question">Now what?</div>
+          <textarea placeholder="The response, the choice..." rows="4" id="choiceText">${state.choice}</textarea>
+          <div class="inspiration">"Stay here" ... "Kindness" ... "Rest in nothing" ... "Let it be" ...</div>
+        `;
+      } else if (state.step === 7) {
+        html = `
+          <div class="label">Step 8 of 8</div>
+          <div class="question">Where does this belong?</div>
+          <div class="hint">Select all that apply</div>
+          <div class="options-list" id="lifeGrid">
+            ${lifeAreas.map(a => `<button class="btn btn-life ${state.lifeAreas.includes(a.id) ? 'selected' : ''}" data-id="${a.id}"><span class="icon">${a.icon}</span><span>${a.label}</span></button>`).join('')}
+            <button class="btn btn-life btn-other ${state.lifeAreas.includes('custom') ? 'selected' : ''}" data-id="custom"><span class="icon">+</span><span>Other</span></button>
+          </div>
+          ${state.lifeAreas.includes('custom') ? `<input type="text" placeholder="Name this life area..." value="${state.customLifeArea}" id="customLifeIn">` : ''}
+          ${state.lifeAreas.length ? `<div class="selected-display"><strong>Selected:</strong> ${getLifeLabels()}</div>` : ''}
+        `;
+      }
+
+      html += `
+        <div class="nav">
+          <button class="nav-btn nav-btn-back ${state.step === 0 ? 'hidden' : ''}" id="backBtn">Back</button>
+          <button class="nav-btn nav-btn-next" id="nextBtn" ${!canProceed() || state.isSubmitting ? 'disabled' : ''}>${state.isSubmitting ? 'Saving...' : (state.step === 7 ? 'Complete' : 'Continue')}</button>
+        </div>
+        ${state.error ? `<div class="error-msg">${state.error}</div>` : ''}
+      `;
+
+      content.innerHTML = html;
+      attachListeners();
+    }
+
+    function attachListeners() {
+      document.getElementById('backBtn')?.addEventListener('click', () => { if (state.step > 0) { state.step--; render(); } });
+      
+      document.getElementById('nextBtn')?.addEventListener('click', async () => {
+        if (!canProceed()) return;
+        if (state.step < 7) { state.step++; render(); }
+        else {
+          state.isSubmitting = true; state.error = null; render();
+          const ok = await submit();
+          state.isSubmitting = false;
+          if (ok) state.step = 'complete';
+          else state.error = 'Could not save. Check connection.';
+          render();
+        }
+      });
+
+      document.getElementById('feelSlider')?.addEventListener('input', e => {
+        state.feeling = +e.target.value;
+        document.getElementById('feelDisplay').textContent = (state.feeling > 0 ? '+' : '') + state.feeling;
+        document.getElementById('feelLabel').textContent = getFeelingLabel(state.feeling);
+        document.getElementById('feelLabel').style.color = getFeelingColor(state.feeling);
+      });
+
+      document.getElementById('srcGrid')?.addEventListener('click', e => {
+        const btn = e.target.closest('.btn');
+        if (btn) { toggle(state.sources, btn.dataset.id); render(); }
+      });
+
+      document.getElementById('bodyGrid')?.addEventListener('click', e => {
+        const btn = e.target.closest('.btn');
+        if (btn) { toggle(state.bodyLocations, btn.dataset.id); render(); }
+      });
+      document.getElementById('customBodyIn')?.addEventListener('input', e => { state.customBodyLocation = e.target.value; });
+
+      document.getElementById('tagsCont')?.addEventListener('click', e => {
+        const btn = e.target.closest('.btn-tag');
+        if (btn) {
+          const t = btn.dataset.tag;
+          state.reactionInterpretation = state.reactionInterpretation ? state.reactionInterpretation + ', ' + t : t;
+          render();
+        }
+      });
+      document.getElementById('reactText')?.addEventListener('input', e => { state.reactionInterpretation = e.target.value; });
+
+      document.getElementById('awareGrid')?.addEventListener('click', e => {
+        const btn = e.target.closest('.btn');
+        if (btn) { state.percentAware = +btn.dataset.value; render(); }
+      });
+
+      document.getElementById('insightText')?.addEventListener('input', e => { state.insight = e.target.value; });
+      document.getElementById('choiceText')?.addEventListener('input', e => { state.choice = e.target.value; });
+
+      document.getElementById('lifeGrid')?.addEventListener('click', e => {
+        const btn = e.target.closest('.btn');
+        if (btn) { toggle(state.lifeAreas, btn.dataset.id); render(); }
+      });
+      document.getElementById('customLifeIn')?.addEventListener('input', e => { state.customLifeArea = e.target.value; });
+    }
+
+    render();
+  </script>
+</body>
+</html>
