@@ -165,7 +165,7 @@
 
   <script>
     // === CONFIGURATION ===
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxslSnoHk67tMm6ITHP_8Pddgd3WRsLr-i6b8b65mDPIf64VX3M3-YCst21wERowro7MA/exec';
+    const GOOGLE_SCRIPT_URL = '';
     // =====================
 
     // Data
@@ -684,7 +684,10 @@
         }
       });
 
-      document.getElementById('segmentText')?.addEventListener('input', e => { state.segment = e.target.value; });
+      document.getElementById('segmentText')?.addEventListener('input', e => { 
+        state.segment = e.target.value; 
+        document.getElementById('nextBtn').disabled = !canProceedSegment();
+      });
 
       document.getElementById('feelSlider')?.addEventListener('input', e => {
         state.feeling = +e.target.value;
