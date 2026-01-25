@@ -208,7 +208,7 @@
     const innerBeingFeelings = [
       'Easy', 'Relaxed', 'Loved & Adored', 'Fun', 'Sensual', 'Absolute Conviction',
       'Thrilled', 'Everything\'s Working Out for Me', 'Absolutely Alive', 'Pleasure',
-      'So Sexy', 'Freedom', 'Clarity', 'Free', 'Bliss and Joy', 'Positive Anticipation'
+      'So Sexy', 'Freedom', 'Clarity', 'Free', 'Bliss and Joy', 'Positive Anticipation', 'Exciting'
     ];
 
     // State
@@ -545,7 +545,10 @@
       document.getElementById('bodyGrid')?.addEventListener('click', e => {
         const btn = e.target.closest('.btn'); if (btn) { toggle(state.bodyLocations, btn.dataset.id); render(); }
       });
-      document.getElementById('customBodyIn')?.addEventListener('input', e => { state.customBodyLocation = e.target.value; });
+      document.getElementById('customBodyIn')?.addEventListener('input', e => { 
+        state.customBodyLocation = e.target.value; 
+        document.getElementById('nextBtn').disabled = !canProceedCheckin();
+      });
 
       document.getElementById('tagsCont')?.addEventListener('click', e => {
         const btn = e.target.closest('.btn-tag');
@@ -563,7 +566,10 @@
       document.getElementById('lifeGrid')?.addEventListener('click', e => {
         const btn = e.target.closest('.btn'); if (btn) { toggle(state.lifeAreas, btn.dataset.id); render(); }
       });
-      document.getElementById('customLifeIn')?.addEventListener('input', e => { state.customLifeArea = e.target.value; });
+      document.getElementById('customLifeIn')?.addEventListener('input', e => { 
+        state.customLifeArea = e.target.value; 
+        document.getElementById('nextBtn').disabled = !canProceedCheckin();
+      });
     }
 
     // ==================== SEGMENT INTEND ====================
@@ -699,7 +705,10 @@
       document.getElementById('innerGrid')?.addEventListener('click', e => {
         const btn = e.target.closest('.btn'); if (btn) { toggle(state.innerBeingFeelings, btn.dataset.feeling); render(); }
       });
-      document.getElementById('customInnerIn')?.addEventListener('input', e => { state.customInnerFeeling = e.target.value; });
+      document.getElementById('customInnerIn')?.addEventListener('input', e => { 
+        state.customInnerFeeling = e.target.value; 
+        document.getElementById('nextBtn').disabled = !canProceedSegment();
+      });
 
       document.getElementById('vibrationText')?.addEventListener('input', e => { state.stayWithVibration = e.target.value; });
       document.getElementById('insightsText')?.addEventListener('input', e => { state.insights = e.target.value; });
@@ -707,7 +716,10 @@
       document.getElementById('lifeGrid')?.addEventListener('click', e => {
         const btn = e.target.closest('.btn'); if (btn) { toggle(state.lifeAreas, btn.dataset.id); render(); }
       });
-      document.getElementById('customLifeIn')?.addEventListener('input', e => { state.customLifeArea = e.target.value; });
+      document.getElementById('customLifeIn')?.addEventListener('input', e => { 
+        state.customLifeArea = e.target.value; 
+        document.getElementById('nextBtn').disabled = !canProceedSegment();
+      });
     }
 
     // Initialize
