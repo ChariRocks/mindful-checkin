@@ -11,379 +11,152 @@
   <link rel="apple-touch-icon" href="icon.svg">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <style>
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body {
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       min-height: 100vh;
       background: linear-gradient(165deg, #FAF6F0 0%, #F5F5DC 50%, rgba(212,196,168,0.25) 100%);
     }
-    .container {
-      padding: 20px;
-      min-height: 100vh;
-    }
+    .container { padding: 20px; min-height: 100vh; }
     .card {
-      max-width: 420px;
-      margin: 0 auto;
-      background: white;
-      border-radius: 24px;
+      max-width: 420px; margin: 0 auto; background: white; border-radius: 24px;
       box-shadow: 0 4px 24px rgba(45, 71, 57, 0.08), 0 1px 3px rgba(45, 71, 57, 0.04);
       overflow: hidden;
     }
     .header {
       background: linear-gradient(135deg, #2D4739 0%, #3A5A40 100%);
-      padding: 28px 24px 24px;
-      color: white;
+      padding: 28px 24px 24px; color: white;
     }
-    .header-complete {
-      background: linear-gradient(135deg, #588157 0%, #3A5A40 100%);
-    }
-    .progress-bar {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 20px;
-    }
+    .header-complete { background: linear-gradient(135deg, #588157 0%, #3A5A40 100%); }
+    .header-segment { background: linear-gradient(135deg, #5C4033 0%, #8B7355 100%); }
+    .header-segment-complete { background: linear-gradient(135deg, #A08060 0%, #8B7355 100%); }
+    .progress-bar { display: flex; gap: 6px; margin-bottom: 20px; }
     .progress-dot {
-      flex: 1;
-      height: 3px;
-      border-radius: 2px;
-      background: rgba(255,255,255,0.25);
-      transition: all 0.3s ease;
+      flex: 1; height: 3px; border-radius: 2px;
+      background: rgba(255,255,255,0.25); transition: all 0.3s ease;
     }
-    .progress-dot.active {
-      background: rgba(255,255,255,0.9);
-    }
-    .header h1 {
-      margin: 0;
-      font-size: 18px;
-      font-weight: 500;
-      opacity: 0.9;
-      letter-spacing: 0.3px;
-    }
-    .content {
-      padding: 28px 24px 24px;
-    }
+    .progress-dot.active { background: rgba(255,255,255,0.9); }
+    .header h1 { margin: 0; font-size: 18px; font-weight: 500; opacity: 0.9; letter-spacing: 0.3px; }
+    .content { padding: 28px 24px 24px; }
     .label {
-      font-size: 13px;
-      font-weight: 500;
-      color: #588157;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 8px;
+      font-size: 13px; font-weight: 500; color: #588157;
+      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;
     }
-    .question {
-      font-size: 22px;
-      font-weight: 600;
-      color: #2D4739;
-      margin-bottom: 24px;
-      line-height: 1.3;
-    }
-    .hint {
-      font-size: 13px;
-      color: #8B7355;
-      margin-bottom: 16px;
-      font-style: italic;
-    }
-    .slider-container {
-      margin-bottom: 32px;
-    }
-    .slider-labels {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 12px;
-      font-size: 13px;
-      color: #8B7355;
-    }
-    .slider-value-label {
-      font-weight: 600;
-      font-size: 15px;
-    }
+    .label-segment { color: #8B7355; }
+    .question { font-size: 22px; font-weight: 600; color: #2D4739; margin-bottom: 24px; line-height: 1.3; }
+    .hint { font-size: 13px; color: #8B7355; margin-bottom: 16px; font-style: italic; }
+    .slider-container { margin-bottom: 32px; }
+    .slider-labels { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 13px; color: #8B7355; }
+    .slider-value-label { font-weight: 600; font-size: 15px; }
     input[type="range"] {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 100%;
-      height: 8px;
-      border-radius: 4px;
-      outline: none;
+      -webkit-appearance: none; appearance: none; width: 100%; height: 8px;
+      border-radius: 4px; outline: none;
       background: linear-gradient(to right, #8B7355 0%, #D4C4A8 50%, #588157 100%);
     }
     input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: #3A5A40;
-      cursor: pointer;
-      border: 3px solid white;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      -webkit-appearance: none; appearance: none; width: 28px; height: 28px;
+      border-radius: 50%; background: #3A5A40; cursor: pointer;
+      border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
     input[type="range"]::-moz-range-thumb {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: #3A5A40;
-      cursor: pointer;
-      border: 3px solid white;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      width: 28px; height: 28px; border-radius: 50%; background: #3A5A40;
+      cursor: pointer; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
-    .feeling-display {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 48px;
-      font-weight: 300;
-      color: #2D4739;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
-    .options-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
+    .feeling-display { text-align: center; margin-top: 20px; font-size: 48px; font-weight: 300; color: #2D4739; }
+    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .options-list { display: flex; flex-direction: column; gap: 10px; }
     .btn {
-      padding: 14px 20px;
-      border-radius: 12px;
-      border: 2px solid #D4C4A8;
-      background: white;
-      color: #5C4033;
-      font-size: 15px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      font-family: inherit;
+      padding: 14px 20px; border-radius: 12px; border: 2px solid #D4C4A8;
+      background: white; color: #5C4033; font-size: 15px; font-weight: 500;
+      cursor: pointer; transition: all 0.2s ease;
+      display: flex; align-items: center; justify-content: center; gap: 10px; font-family: inherit;
     }
-    .btn:hover {
-      border-color: #A3B18A;
+    .btn:hover { border-color: #A3B18A; }
+    .btn.selected { border-color: #3A5A40; background: #3A5A40; color: white; }
+    .btn-mode {
+      flex-direction: column; padding: 24px 20px; gap: 8px;
+      border-radius: 16px; text-align: center;
     }
-    .btn.selected {
-      border-color: #3A5A40;
-      background: #3A5A40;
-      color: white;
-    }
-    .btn-source {
-      flex-direction: column;
-      padding: 20px 16px;
-      gap: 8px;
-    }
-    .btn-source .icon {
-      font-size: 24px;
-      opacity: 0.8;
-    }
-    .btn-body {
-      justify-content: flex-start;
-      padding: 12px 16px;
-    }
-    .btn-awareness {
-      justify-content: flex-start;
-      padding: 16px 20px;
-    }
-    .btn-awareness .level {
-      width: 50px;
-      font-weight: 700;
-    }
-    .btn-awareness.selected .level {
-      color: white;
-    }
-    .btn-awareness .desc {
-      opacity: 0.7;
-      font-size: 14px;
-    }
-    .btn-life {
-      justify-content: flex-start;
-      padding: 18px 20px;
-    }
-    .btn-life .icon {
-      font-size: 20px;
-      width: 32px;
-    }
-    .btn-other {
-      border-style: dashed;
-    }
-    .btn-tag {
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 13px;
-    }
-    .tags-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
+    .btn-mode .icon { font-size: 32px; margin-bottom: 4px; }
+    .btn-mode .title { font-size: 17px; font-weight: 600; }
+    .btn-mode .subtitle { font-size: 13px; opacity: 0.7; font-weight: 400; }
+    .btn-source { flex-direction: column; padding: 20px 16px; gap: 8px; }
+    .btn-source .icon { font-size: 24px; opacity: 0.8; }
+    .btn-body { justify-content: flex-start; padding: 12px 16px; }
+    .btn-awareness { justify-content: flex-start; padding: 16px 20px; }
+    .btn-awareness .level { width: 50px; font-weight: 700; }
+    .btn-awareness.selected .level { color: white; }
+    .btn-awareness .desc { opacity: 0.7; font-size: 14px; }
+    .btn-life { justify-content: flex-start; padding: 18px 20px; }
+    .btn-life .icon { font-size: 20px; width: 32px; }
+    .btn-feeling { padding: 12px 16px; font-size: 14px; }
+    .btn-other { border-style: dashed; }
+    .btn-tag { padding: 8px 16px; border-radius: 20px; font-size: 13px; }
+    .tags-container { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .feelings-grid { display: flex; flex-wrap: wrap; gap: 10px; }
     .selected-display {
-      margin-top: 16px;
-      padding: 12px 16px;
-      background: #FAF6F0;
-      border-radius: 10px;
-      font-size: 14px;
-      color: #2D4739;
+      margin-top: 16px; padding: 12px 16px; background: #FAF6F0;
+      border-radius: 10px; font-size: 14px; color: #2D4739;
     }
-    .selected-display strong {
-      color: #2D4739;
-    }
+    .selected-display strong { color: #2D4739; }
     textarea, input[type="text"] {
-      width: 100%;
-      padding: 16px;
-      border-radius: 12px;
-      border: 2px solid #D4C4A8;
-      font-size: 15px;
-      font-family: inherit;
-      resize: none;
-      outline: none;
-      color: #2D4739;
-      transition: border-color 0.2s ease;
+      width: 100%; padding: 16px; border-radius: 12px; border: 2px solid #D4C4A8;
+      font-size: 15px; font-family: inherit; resize: none; outline: none;
+      color: #2D4739; transition: border-color 0.2s ease;
     }
-    textarea:focus, input[type="text"]:focus {
-      border-color: #3A5A40;
-    }
-    input[type="text"] {
-      padding: 14px 16px;
-      margin-top: 12px;
-    }
+    textarea:focus, input[type="text"]:focus { border-color: #3A5A40; }
+    input[type="text"] { padding: 14px 16px; margin-top: 12px; }
     .inspiration {
-      margin-top: 16px;
-      padding: 16px;
-      background: #FAF6F0;
-      border-radius: 12px;
-      font-size: 14px;
-      color: #8B7355;
-      line-height: 1.5;
-      font-style: italic;
+      margin-top: 16px; padding: 16px; background: #FAF6F0; border-radius: 12px;
+      font-size: 14px; color: #8B7355; line-height: 1.5; font-style: italic;
     }
     .nav {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 32px;
-      padding-top: 20px;
-      border-top: 1px solid #D4C4A8;
+      display: flex; justify-content: space-between; margin-top: 32px;
+      padding-top: 20px; border-top: 1px solid #D4C4A8;
     }
     .nav-btn {
-      padding: 14px 28px;
-      border-radius: 12px;
-      border: none;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      font-family: inherit;
+      padding: 14px 28px; border-radius: 12px; border: none;
+      font-size: 15px; font-weight: 600; cursor: pointer;
+      transition: all 0.2s ease; font-family: inherit;
     }
-    .nav-btn-back {
-      background: transparent;
-      color: #588157;
-    }
-    .nav-btn-next {
-      background: #3A5A40;
-      color: white;
-    }
-    .nav-btn-next:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    .nav-btn.hidden {
-      visibility: hidden;
-    }
-    .footer {
-      text-align: center;
-      margin-top: 24px;
-      font-size: 13px;
-      color: #588157;
-      opacity: 0.7;
-    }
-    .summary {
-      background: #FAF6F0;
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 20px;
-    }
-    .summary-title {
-      font-size: 13px;
-      color: #588157;
-      margin-bottom: 16px;
-      font-weight: 500;
-    }
-    .summary-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 12px;
-    }
-    .summary-label {
-      color: #8B7355;
-    }
-    .summary-value {
-      color: #2D4739;
-      font-weight: 500;
-      text-align: right;
-      max-width: 60%;
-    }
-    .summary-section {
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px solid #D4C4A8;
-    }
-    .summary-section-label {
-      font-size: 12px;
-      color: #588157;
-      margin-bottom: 6px;
-    }
-    .summary-section-value {
-      color: #2D4739;
-    }
-    .summary-section-value.italic {
-      font-style: italic;
-    }
-    .complete-icon {
-      font-size: 48px;
-      margin-bottom: 12px;
-    }
-    .complete-title {
-      margin: 0;
-      font-size: 22px;
-      font-weight: 600;
-    }
+    .nav-btn-back { background: transparent; color: #588157; }
+    .nav-btn-next { background: #3A5A40; color: white; }
+    .nav-btn-next:disabled { opacity: 0.5; cursor: not-allowed; }
+    .nav-btn.hidden { visibility: hidden; }
+    .footer { text-align: center; margin-top: 24px; font-size: 13px; color: #588157; opacity: 0.7; }
+    .summary { background: #FAF6F0; border-radius: 16px; padding: 20px; margin-bottom: 20px; }
+    .summary-title { font-size: 13px; color: #588157; margin-bottom: 16px; font-weight: 500; }
+    .summary-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+    .summary-label { color: #8B7355; }
+    .summary-value { color: #2D4739; font-weight: 500; text-align: right; max-width: 60%; }
+    .summary-section { margin-top: 16px; padding-top: 16px; border-top: 1px solid #D4C4A8; }
+    .summary-section-label { font-size: 12px; color: #588157; margin-bottom: 6px; }
+    .summary-section-value { color: #2D4739; }
+    .summary-section-value.italic { font-style: italic; }
+    .complete-icon { font-size: 48px; margin-bottom: 12px; }
+    .complete-title { margin: 0; font-size: 22px; font-weight: 600; }
     .btn-new {
-      width: 100%;
-      padding: 16px;
-      border-radius: 12px;
-      border: none;
-      background: #3A5A40;
-      color: white;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: inherit;
+      width: 100%; padding: 16px; border-radius: 12px; border: none;
+      background: #3A5A40; color: white; font-size: 16px; font-weight: 600;
+      cursor: pointer; font-family: inherit; margin-bottom: 12px;
     }
-    .error-msg {
-      margin-top: 16px;
-      padding: 12px;
-      background: #fee;
-      border-radius: 8px;
-      color: #c00;
-      font-size: 14px;
+    .btn-secondary {
+      width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #D4C4A8;
+      background: white; color: #5C4033; font-size: 15px; font-weight: 500;
+      cursor: pointer; font-family: inherit;
     }
-    .hidden {
-      display: none !important;
-    }
+    .error-msg { margin-top: 16px; padding: 12px; background: #fee; border-radius: 8px; color: #c00; font-size: 14px; }
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="card">
       <div class="header" id="header">
-        <div class="progress-bar" id="progressBar"></div>
-        <h1>Mindful Check-in</h1>
+        <div class="progress-bar hidden" id="progressBar"></div>
+        <h1 id="headerTitle">Welcome</h1>
       </div>
       <div class="content" id="content"></div>
     </div>
@@ -395,6 +168,7 @@
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxslSnoHk67tMm6ITHP_8Pddgd3WRsLr-i6b8b65mDPIf64VX3M3-YCst21wERowro7MA/exec';
     // =====================
 
+    // Data
     const sources = [
       { id: 'see', label: 'Seeing', icon: '◉' },
       { id: 'hear', label: 'Hearing', icon: '◎' },
@@ -406,14 +180,10 @@
     ];
 
     const bodyLocations = [
-      { id: 'head', label: 'Head' },
-      { id: 'throat', label: 'Throat' },
-      { id: 'shoulders', label: 'Shoulders' },
-      { id: 'chest', label: 'Chest' },
-      { id: 'gut', label: 'Gut' },
-      { id: 'back', label: 'Back' },
-      { id: 'limbs', label: 'Limbs' },
-      { id: 'whole', label: 'Whole Body' }
+      { id: 'head', label: 'Head' }, { id: 'throat', label: 'Throat' },
+      { id: 'shoulders', label: 'Shoulders' }, { id: 'chest', label: 'Chest' },
+      { id: 'gut', label: 'Gut' }, { id: 'back', label: 'Back' },
+      { id: 'limbs', label: 'Limbs' }, { id: 'whole', label: 'Whole Body' }
     ];
 
     const awarenessLevels = [
@@ -435,22 +205,33 @@
 
     const reactionTags = ['Fear', 'Anger', 'Wanting', 'Resisting', 'Grasping', 'Judging', 'Worrying', 'Replaying', 'Delight', 'Peace', 'Neutral'];
 
-    let state = {
-      step: 0,
-      feeling: 0,
-      sources: [],
-      bodyLocations: [],
-      customBodyLocation: '',
-      reactionInterpretation: '',
-      percentAware: null,
-      insight: '',
-      choice: '',
-      lifeAreas: [],
-      customLifeArea: '',
-      isSubmitting: false,
-      error: null
-    };
+    const innerBeingFeelings = [
+      'Easy', 'Relaxed', 'Loved & Adored', 'Fun', 'Sensual', 'Absolute Conviction',
+      'Thrilled', 'Everything\'s Working Out for Me', 'Absolutely Alive', 'Pleasure',
+      'So Sexy', 'Freedom', 'Clarity', 'Free', 'Bliss and Joy', 'Positive Anticipation'
+    ];
 
+    // State
+    let mode = null; // 'checkin' or 'segment'
+    let state = {};
+
+    function resetCheckinState() {
+      state = {
+        step: 0, feeling: 0, sources: [], bodyLocations: [], customBodyLocation: '',
+        reactionInterpretation: '', percentAware: null, insight: '', choice: '',
+        lifeAreas: [], customLifeArea: '', isSubmitting: false, error: null
+      };
+    }
+
+    function resetSegmentState() {
+      state = {
+        step: 0, segment: '', feeling: 0, innerBeingFeelings: [], customInnerFeeling: '',
+        stayWithVibration: '', insights: '', lifeAreas: [], customLifeArea: '',
+        isSubmitting: false, error: null
+      };
+    }
+
+    // Helpers
     function getFeelingLabel(v) {
       if (v <= -7) return 'Intense suffering';
       if (v <= -4) return 'Very unpleasant';
@@ -485,6 +266,12 @@
       return labels.join(', ');
     }
 
+    function getInnerFeelingLabels() {
+      const labels = state.innerBeingFeelings.filter(f => f !== 'custom');
+      if (state.innerBeingFeelings.includes('custom') && state.customInnerFeeling) labels.push(state.customInnerFeeling);
+      return labels.join(', ');
+    }
+
     function toggle(arr, item) {
       const i = arr.indexOf(item);
       if (i > -1) arr.splice(i, 1);
@@ -492,7 +279,7 @@
       return arr;
     }
 
-    function canProceed() {
+    function canProceedCheckin() {
       switch(state.step) {
         case 0: return true;
         case 1: return state.sources.length > 0;
@@ -506,17 +293,26 @@
       }
     }
 
-    async function submit() {
-      if (!GOOGLE_SCRIPT_URL) {
-        console.log('No Google Script URL. Data:', state);
-        return true;
+    function canProceedSegment() {
+      switch(state.step) {
+        case 0: return state.segment.trim().length > 0;
+        case 1: return true;
+        case 2: return state.innerBeingFeelings.length > 0 && (!state.innerBeingFeelings.includes('custom') || state.customInnerFeeling.trim());
+        case 3: return true;
+        case 4: return true;
+        case 5: return state.lifeAreas.length > 0 && (!state.lifeAreas.includes('custom') || state.customLifeArea.trim());
+        default: return true;
       }
+    }
+
+    async function submitCheckin() {
+      if (!GOOGLE_SCRIPT_URL) { console.log('No URL. Data:', state); return true; }
       try {
         await fetch(GOOGLE_SCRIPT_URL, {
-          method: 'POST',
-          mode: 'no-cors',
+          method: 'POST', mode: 'no-cors',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
+            type: 'checkin',
             dateTime: new Date().toLocaleString(),
             feeling: state.feeling,
             source: getSourceLabels(),
@@ -529,20 +325,65 @@
           })
         });
         return true;
-      } catch (e) {
-        console.error(e);
-        return false;
-      }
+      } catch (e) { console.error(e); return false; }
     }
 
-    function reset() {
-      state = { step: 0, feeling: 0, sources: [], bodyLocations: [], customBodyLocation: '', reactionInterpretation: '', percentAware: null, insight: '', choice: '', lifeAreas: [], customLifeArea: '', isSubmitting: false, error: null };
+    async function submitSegment() {
+      if (!GOOGLE_SCRIPT_URL) { console.log('No URL. Data:', state); return true; }
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST', mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'segment',
+            dateTime: new Date().toLocaleString(),
+            segment: state.segment,
+            feeling: state.feeling,
+            innerBeingFeels: getInnerFeelingLabels(),
+            stayWithVibration: state.stayWithVibration,
+            insights: state.insights,
+            lifeArea: getLifeLabels()
+          })
+        });
+        return true;
+      } catch (e) { console.error(e); return false; }
     }
 
-    function renderProgress() {
+    // Render
+    function renderHome() {
+      const header = document.getElementById('header');
+      const progressBar = document.getElementById('progressBar');
+      const headerTitle = document.getElementById('headerTitle');
+      
+      header.className = 'header';
+      progressBar.classList.add('hidden');
+      headerTitle.textContent = 'Welcome';
+
+      document.getElementById('content').innerHTML = `
+        <div class="question" style="text-align: center; margin-bottom: 32px;">What would you like to do?</div>
+        <div class="options-list">
+          <button class="btn btn-mode" id="segmentBtn">
+            <span class="icon">🌅</span>
+            <span class="title">Segment Intend</span>
+            <span class="subtitle">Align before a new moment</span>
+          </button>
+          <button class="btn btn-mode" id="checkinBtn">
+            <span class="icon">🔍</span>
+            <span class="title">Mindful Check-in</span>
+            <span class="subtitle">Notice what's present</span>
+          </button>
+        </div>
+      `;
+
+      document.getElementById('segmentBtn').onclick = () => { mode = 'segment'; resetSegmentState(); render(); };
+      document.getElementById('checkinBtn').onclick = () => { mode = 'checkin'; resetCheckinState(); render(); };
+    }
+
+    function renderProgress(total) {
       const bar = document.getElementById('progressBar');
+      bar.classList.remove('hidden');
       bar.innerHTML = '';
-      for (let i = 0; i < 8; i++) {
+      for (let i = 0; i < total; i++) {
         const dot = document.createElement('div');
         dot.className = 'progress-dot' + (i <= state.step ? ' active' : '');
         bar.appendChild(dot);
@@ -550,11 +391,21 @@
     }
 
     function render() {
-      const content = document.getElementById('content');
+      if (!mode) { renderHome(); return; }
+      if (mode === 'checkin') renderCheckin();
+      else renderSegment();
+    }
+
+    // ==================== CHECKIN ====================
+    function renderCheckin() {
       const header = document.getElementById('header');
+      const headerTitle = document.getElementById('headerTitle');
+      const content = document.getElementById('content');
 
       if (state.step === 'complete') {
         header.className = 'header header-complete';
+        document.getElementById('progressBar').classList.add('hidden');
+        headerTitle.textContent = '';
         header.innerHTML = `<div style="text-align:center"><div class="complete-icon">✓</div><h2 class="complete-title">Check-in Complete</h2></div>`;
         content.innerHTML = `
           <div class="summary">
@@ -569,14 +420,18 @@
             ${state.choice ? `<div class="summary-section"><div class="summary-section-label">CHOICE</div><div class="summary-section-value">${state.choice}</div></div>` : ''}
           </div>
           <button class="btn-new" id="newBtn">New Check-in</button>
+          <button class="btn-secondary" id="homeBtn">Back to Home</button>
         `;
-        document.getElementById('newBtn').onclick = () => { reset(); header.className = 'header'; header.innerHTML = `<div class="progress-bar" id="progressBar"></div><h1>Mindful Check-in</h1>`; render(); };
+        document.getElementById('newBtn').onclick = () => { resetCheckinState(); header.className = 'header'; header.innerHTML = `<div class="progress-bar" id="progressBar"></div><h1 id="headerTitle">Mindful Check-in</h1>`; render(); };
+        document.getElementById('homeBtn').onclick = () => { mode = null; header.innerHTML = `<div class="progress-bar hidden" id="progressBar"></div><h1 id="headerTitle">Welcome</h1>`; render(); };
         return;
       }
 
-      renderProgress();
-      let html = '';
+      header.className = 'header';
+      headerTitle.textContent = 'Mindful Check-in';
+      renderProgress(8);
 
+      let html = '';
       if (state.step === 0) {
         html = `
           <div class="label">Step 1 of 8</div>
@@ -651,24 +506,24 @@
       html += `
         <div class="nav">
           <button class="nav-btn nav-btn-back ${state.step === 0 ? 'hidden' : ''}" id="backBtn">Back</button>
-          <button class="nav-btn nav-btn-next" id="nextBtn" ${!canProceed() || state.isSubmitting ? 'disabled' : ''}>${state.isSubmitting ? 'Saving...' : (state.step === 7 ? 'Complete' : 'Continue')}</button>
+          <button class="nav-btn nav-btn-next" id="nextBtn" ${!canProceedCheckin() || state.isSubmitting ? 'disabled' : ''}>${state.isSubmitting ? 'Saving...' : (state.step === 7 ? 'Complete' : 'Continue')}</button>
         </div>
         ${state.error ? `<div class="error-msg">${state.error}</div>` : ''}
       `;
 
       content.innerHTML = html;
-      attachListeners();
+      attachCheckinListeners();
     }
 
-    function attachListeners() {
+    function attachCheckinListeners() {
       document.getElementById('backBtn')?.addEventListener('click', () => { if (state.step > 0) { state.step--; render(); } });
       
       document.getElementById('nextBtn')?.addEventListener('click', async () => {
-        if (!canProceed()) return;
+        if (!canProceedCheckin()) return;
         if (state.step < 7) { state.step++; render(); }
         else {
           state.isSubmitting = true; state.error = null; render();
-          const ok = await submit();
+          const ok = await submitCheckin();
           state.isSubmitting = false;
           if (ok) state.step = 'complete';
           else state.error = 'Could not save. Check connection.';
@@ -684,41 +539,175 @@
       });
 
       document.getElementById('srcGrid')?.addEventListener('click', e => {
-        const btn = e.target.closest('.btn');
-        if (btn) { toggle(state.sources, btn.dataset.id); render(); }
+        const btn = e.target.closest('.btn'); if (btn) { toggle(state.sources, btn.dataset.id); render(); }
       });
 
       document.getElementById('bodyGrid')?.addEventListener('click', e => {
-        const btn = e.target.closest('.btn');
-        if (btn) { toggle(state.bodyLocations, btn.dataset.id); render(); }
+        const btn = e.target.closest('.btn'); if (btn) { toggle(state.bodyLocations, btn.dataset.id); render(); }
       });
       document.getElementById('customBodyIn')?.addEventListener('input', e => { state.customBodyLocation = e.target.value; });
 
       document.getElementById('tagsCont')?.addEventListener('click', e => {
         const btn = e.target.closest('.btn-tag');
-        if (btn) {
-          const t = btn.dataset.tag;
-          state.reactionInterpretation = state.reactionInterpretation ? state.reactionInterpretation + ', ' + t : t;
-          render();
-        }
+        if (btn) { state.reactionInterpretation = state.reactionInterpretation ? state.reactionInterpretation + ', ' + btn.dataset.tag : btn.dataset.tag; render(); }
       });
       document.getElementById('reactText')?.addEventListener('input', e => { state.reactionInterpretation = e.target.value; });
 
       document.getElementById('awareGrid')?.addEventListener('click', e => {
-        const btn = e.target.closest('.btn');
-        if (btn) { state.percentAware = +btn.dataset.value; render(); }
+        const btn = e.target.closest('.btn'); if (btn) { state.percentAware = +btn.dataset.value; render(); }
       });
 
       document.getElementById('insightText')?.addEventListener('input', e => { state.insight = e.target.value; });
       document.getElementById('choiceText')?.addEventListener('input', e => { state.choice = e.target.value; });
 
       document.getElementById('lifeGrid')?.addEventListener('click', e => {
-        const btn = e.target.closest('.btn');
-        if (btn) { toggle(state.lifeAreas, btn.dataset.id); render(); }
+        const btn = e.target.closest('.btn'); if (btn) { toggle(state.lifeAreas, btn.dataset.id); render(); }
       });
       document.getElementById('customLifeIn')?.addEventListener('input', e => { state.customLifeArea = e.target.value; });
     }
 
+    // ==================== SEGMENT INTEND ====================
+    function renderSegment() {
+      const header = document.getElementById('header');
+      const headerTitle = document.getElementById('headerTitle');
+      const content = document.getElementById('content');
+
+      if (state.step === 'complete') {
+        header.className = 'header header-segment-complete';
+        document.getElementById('progressBar').classList.add('hidden');
+        header.innerHTML = `<div style="text-align:center"><div class="complete-icon">✨</div><h2 class="complete-title">Aligned</h2></div>`;
+        content.innerHTML = `
+          <div class="summary">
+            <div class="summary-title">YOUR INTENTION</div>
+            <div class="summary-row"><span class="summary-label">Segment</span><span class="summary-value">${state.segment}</span></div>
+            <div class="summary-row"><span class="summary-label">Starting point</span><span class="summary-value" style="font-weight:600">${state.feeling > 0 ? '+' : ''}${state.feeling}</span></div>
+            <div class="summary-row"><span class="summary-label">Inner being feels</span><span class="summary-value">${getInnerFeelingLabels()}</span></div>
+            <div class="summary-row"><span class="summary-label">Life Area</span><span class="summary-value">${getLifeLabels()}</span></div>
+            ${state.stayWithVibration ? `<div class="summary-section"><div class="summary-section-label">STAYING WITH IT</div><div class="summary-section-value">${state.stayWithVibration}</div></div>` : ''}
+            ${state.insights ? `<div class="summary-section"><div class="summary-section-label">INSIGHT</div><div class="summary-section-value italic">"${state.insights}"</div></div>` : ''}
+          </div>
+          <button class="btn-new" id="newBtn">New Intention</button>
+          <button class="btn-secondary" id="homeBtn">Back to Home</button>
+        `;
+        document.getElementById('newBtn').onclick = () => { resetSegmentState(); header.className = 'header header-segment'; header.innerHTML = `<div class="progress-bar" id="progressBar"></div><h1 id="headerTitle">Segment Intend</h1>`; render(); };
+        document.getElementById('homeBtn').onclick = () => { mode = null; header.className = 'header'; header.innerHTML = `<div class="progress-bar hidden" id="progressBar"></div><h1 id="headerTitle">Welcome</h1>`; render(); };
+        return;
+      }
+
+      header.className = 'header header-segment';
+      headerTitle.textContent = 'Segment Intend';
+      renderProgress(6);
+
+      let html = '';
+      if (state.step === 0) {
+        html = `
+          <div class="label label-segment">Step 1 of 6</div>
+          <div class="question">What segment are you stepping into?</div>
+          <textarea placeholder="Meeting, phone call, creative work, workout, meal..." rows="3" id="segmentText">${state.segment}</textarea>
+          <div class="inspiration">"Morning focus session" ... "Call with mom" ... "Writing time" ... "Gym" ...</div>
+        `;
+      } else if (state.step === 1) {
+        html = `
+          <div class="label label-segment">Step 2 of 6</div>
+          <div class="question">How am I feeling?</div>
+          <div class="slider-container">
+            <div class="slider-labels"><span>-10</span><span class="slider-value-label" id="feelLabel" style="color:${getFeelingColor(state.feeling)}">${getFeelingLabel(state.feeling)}</span><span>+10</span></div>
+            <input type="range" min="-10" max="10" value="${state.feeling}" id="feelSlider">
+            <div class="feeling-display" id="feelDisplay">${state.feeling > 0 ? '+' : ''}${state.feeling}</div>
+          </div>
+        `;
+      } else if (state.step === 2) {
+        html = `
+          <div class="label label-segment">Step 3 of 6</div>
+          <div class="question">How does my inner being feel right now?</div>
+          <div class="hint">Select all that apply</div>
+          <div class="feelings-grid" id="innerGrid">
+            ${innerBeingFeelings.map(f => `<button class="btn btn-feeling ${state.innerBeingFeelings.includes(f) ? 'selected' : ''}" data-feeling="${f}">${f}</button>`).join('')}
+            <button class="btn btn-feeling btn-other ${state.innerBeingFeelings.includes('custom') ? 'selected' : ''}" data-feeling="custom">+ Other</button>
+          </div>
+          ${state.innerBeingFeelings.includes('custom') ? `<input type="text" placeholder="Describe the feeling..." value="${state.customInnerFeeling}" id="customInnerIn">` : ''}
+          ${state.innerBeingFeelings.length ? `<div class="selected-display"><strong>Selected:</strong> ${getInnerFeelingLabels()}</div>` : ''}
+        `;
+      } else if (state.step === 3) {
+        html = `
+          <div class="label label-segment">Step 4 of 6</div>
+          <div class="question">How can I best stay with this vibration for 68 seconds?</div>
+          <textarea placeholder="Your strategy..." rows="4" id="vibrationText">${state.stayWithVibration}</textarea>
+          <div class="inspiration">"Breathe and feel it" ... "Visualize it done" ... "Smile and relax" ... "Feel it in my body" ...</div>
+        `;
+      } else if (state.step === 4) {
+        html = `
+          <div class="label label-segment">Step 5 of 6</div>
+          <div class="question">Any insights?</div>
+          <textarea placeholder="What's coming through..." rows="4" id="insightsText">${state.insights}</textarea>
+          <div class="inspiration">"I'm already there" ... "This is who I am" ... "It's done" ...</div>
+        `;
+      } else if (state.step === 5) {
+        html = `
+          <div class="label label-segment">Step 6 of 6</div>
+          <div class="question">Where does this belong?</div>
+          <div class="hint">Select all that apply</div>
+          <div class="options-list" id="lifeGrid">
+            ${lifeAreas.map(a => `<button class="btn btn-life ${state.lifeAreas.includes(a.id) ? 'selected' : ''}" data-id="${a.id}"><span class="icon">${a.icon}</span><span>${a.label}</span></button>`).join('')}
+            <button class="btn btn-life btn-other ${state.lifeAreas.includes('custom') ? 'selected' : ''}" data-id="custom"><span class="icon">+</span><span>Other</span></button>
+          </div>
+          ${state.lifeAreas.includes('custom') ? `<input type="text" placeholder="Name this life area..." value="${state.customLifeArea}" id="customLifeIn">` : ''}
+          ${state.lifeAreas.length ? `<div class="selected-display"><strong>Selected:</strong> ${getLifeLabels()}</div>` : ''}
+        `;
+      }
+
+      html += `
+        <div class="nav">
+          <button class="nav-btn nav-btn-back ${state.step === 0 ? 'hidden' : ''}" id="backBtn">Back</button>
+          <button class="nav-btn nav-btn-next" id="nextBtn" ${!canProceedSegment() || state.isSubmitting ? 'disabled' : ''}>${state.isSubmitting ? 'Saving...' : (state.step === 5 ? 'Complete' : 'Continue')}</button>
+        </div>
+        ${state.error ? `<div class="error-msg">${state.error}</div>` : ''}
+      `;
+
+      content.innerHTML = html;
+      attachSegmentListeners();
+    }
+
+    function attachSegmentListeners() {
+      document.getElementById('backBtn')?.addEventListener('click', () => { if (state.step > 0) { state.step--; render(); } });
+      
+      document.getElementById('nextBtn')?.addEventListener('click', async () => {
+        if (!canProceedSegment()) return;
+        if (state.step < 5) { state.step++; render(); }
+        else {
+          state.isSubmitting = true; state.error = null; render();
+          const ok = await submitSegment();
+          state.isSubmitting = false;
+          if (ok) state.step = 'complete';
+          else state.error = 'Could not save. Check connection.';
+          render();
+        }
+      });
+
+      document.getElementById('segmentText')?.addEventListener('input', e => { state.segment = e.target.value; });
+
+      document.getElementById('feelSlider')?.addEventListener('input', e => {
+        state.feeling = +e.target.value;
+        document.getElementById('feelDisplay').textContent = (state.feeling > 0 ? '+' : '') + state.feeling;
+        document.getElementById('feelLabel').textContent = getFeelingLabel(state.feeling);
+        document.getElementById('feelLabel').style.color = getFeelingColor(state.feeling);
+      });
+
+      document.getElementById('innerGrid')?.addEventListener('click', e => {
+        const btn = e.target.closest('.btn'); if (btn) { toggle(state.innerBeingFeelings, btn.dataset.feeling); render(); }
+      });
+      document.getElementById('customInnerIn')?.addEventListener('input', e => { state.customInnerFeeling = e.target.value; });
+
+      document.getElementById('vibrationText')?.addEventListener('input', e => { state.stayWithVibration = e.target.value; });
+      document.getElementById('insightsText')?.addEventListener('input', e => { state.insights = e.target.value; });
+
+      document.getElementById('lifeGrid')?.addEventListener('click', e => {
+        const btn = e.target.closest('.btn'); if (btn) { toggle(state.lifeAreas, btn.dataset.id); render(); }
+      });
+      document.getElementById('customLifeIn')?.addEventListener('input', e => { state.customLifeArea = e.target.value; });
+    }
+
+    // Initialize
     render();
   </script>
 </body>
