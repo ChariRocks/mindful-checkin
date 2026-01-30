@@ -79,6 +79,119 @@
     .btn-tag { padding: 8px 16px; border-radius: 20px; font-size: 13px; }
     .tags-container { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
     .feelings-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+    
+    /* Clean Grid Emotion Selector */
+    .feelings-section { margin-bottom: 16px; }
+    .feelings-section-label { 
+      font-size: 11px; 
+      font-weight: 600; 
+      color: #8B7355; 
+      text-transform: uppercase; 
+      letter-spacing: 1px; 
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .feelings-core {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      padding: 16px;
+      background: linear-gradient(135deg, rgba(163, 177, 138, 0.15) 0%, rgba(88, 129, 87, 0.1) 100%);
+      border-radius: 16px;
+      margin-bottom: 16px;
+    }
+    .feelings-core .feeling-btn {
+      background: rgba(255, 255, 255, 0.9);
+      border-color: #A3B18A;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .feelings-core .feeling-btn.selected {
+      background: #3A5A40;
+      border-color: #3A5A40;
+      color: white;
+    }
+    .ib-center {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+    .ib-sun {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 40%, #FFF8DC, #FFD700, #DAA520);
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.5), 0 0 60px rgba(255, 215, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: 3px solid rgba(255, 255, 255, 0.8);
+      transition: all 0.3s ease;
+      font-size: 12px;
+      font-weight: 600;
+      color: #5C4033;
+      text-align: center;
+      line-height: 1.2;
+    }
+    .ib-sun:hover {
+      box-shadow: 0 0 40px rgba(255, 215, 0, 0.7), 0 0 80px rgba(255, 215, 0, 0.4);
+      transform: scale(1.05);
+    }
+    .ib-sun.selected {
+      box-shadow: 0 0 50px rgba(255, 215, 0, 0.9), 0 0 100px rgba(255, 215, 0, 0.5);
+      border-color: #3A5A40;
+    }
+    .feelings-more {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      padding: 12px;
+    }
+    .feeling-btn {
+      padding: 10px 14px;
+      border-radius: 20px;
+      border: 2px solid #D4C4A8;
+      background: white;
+      color: #5C4033;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    .feeling-btn:hover {
+      border-color: #A3B18A;
+    }
+    .feeling-btn.selected {
+      border-color: #3A5A40;
+      background: #3A5A40;
+      color: white;
+    }
+    .feeling-btn.other {
+      border-style: dashed;
+    }
+    
+    /* Alignment Affirmation */
+    .alignment-affirmation {
+      text-align: center;
+      padding: 20px 16px;
+      margin-bottom: 16px;
+    }
+    .affirmation-main {
+      font-size: 18px;
+      font-weight: 600;
+      color: #3A5A40;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    .affirmation-sub {
+      font-size: 14px;
+      font-style: italic;
+      color: #8B7355;
+    }
     .selected-display { margin-top: 16px; padding: 12px 16px; background: #FAF6F0; border-radius: 10px; font-size: 14px; color: #2D4739; }
     .selected-display strong { color: #2D4739; }
     textarea, input[type="text"] { width: 100%; padding: 16px; border-radius: 12px; border: 2px solid #D4C4A8; font-size: 15px; font-family: inherit; resize: none; outline: none; color: #2D4739; transition: border-color 0.2s ease; }
@@ -152,11 +265,22 @@
       { id: 'wholeness', label: 'Wholeness', icon: '○' }
     ];
     const reactionTags = ['Fear', 'Anger', 'Wanting', 'Resisting', 'Grasping', 'Judging', 'Worrying', 'Replaying', 'Delight', 'Peace', 'Neutral'];
-    const innerBeingFeelings = [
-      'Easy', 'Relaxed', 'Loved', 'Adored', 'Appreciation', 'I am ok', 'Deserving', 'Positive Anticipation', 'Fun / Exciting', 'Sensual / Inner Body', 'Absolute Conviction',
-      'Thrilled', 'Everything\'s Working Out for Me', 'Alive /  Vitality', 'Pleasure', 'Desired',
-      'Invincible', 'Freedom', 'Clarity', 'Free', 'Bliss and Joy', 
+    
+    // Inner ring - 8 core activators (closest to IB)
+    const innerRingFeelings = [
+      'Relaxed', 'Loved', 'Desired', 'Deserving / Worthy',
+      "+'ve Anticipation", 'Excited / Fun', 'Alive / Vitality', 'Stillness / Unknown / Trust'
     ];
+    
+    // Outer ring - remaining feelings
+    const outerRingFeelings = [
+      'Easy', 'Adored', 'Appreciation', 'I am ok', 'Sensual / Inner Body',
+      'Absolute Conviction', 'Thrilled', "Everything's Working Out for Me",
+      'Pleasure', 'Invincible', 'Freedom', 'Clarity', 'Bliss and Joy'
+    ];
+    
+    // Combined for data handling
+    const innerBeingFeelings = [...innerRingFeelings, ...outerRingFeelings];
 
     let mode = null;
     let state = {};
@@ -329,7 +453,12 @@
         header.className = 'header header-segment-complete';
         document.getElementById('progressBar').classList.add('hidden');
         header.innerHTML = `<div style="text-align:center"><div class="complete-icon">✨</div><h2 class="complete-title">Aligned</h2></div>`;
-        content.innerHTML = `<div class="summary"><div class="summary-title">YOUR INTENTION</div>
+        content.innerHTML = `
+          <div class="alignment-affirmation">
+            <div class="affirmation-main">"Now walk as it. Talk as it. Be it."</div>
+            <div class="affirmation-sub">What if I let this version of me lead?</div>
+          </div>
+          <div class="summary"><div class="summary-title">YOUR INTENTION</div>
           <div class="summary-row"><span class="summary-label">Segment</span><span class="summary-value">${state.segment}</span></div>
           <div class="summary-row"><span class="summary-label">Starting point</span><span class="summary-value" style="font-weight:600">${state.feeling > 0 ? '+' : ''}${state.feeling}</span></div>
           <div class="summary-row"><span class="summary-label">Inner being feels</span><span class="summary-value">${getInnerFeelingLabels()}</span></div>
@@ -348,7 +477,32 @@
       let html = '';
       if (state.step === 0) html = `<div class="label label-segment">Step 1 of 6</div><div class="question">What segment are you stepping into?</div><textarea placeholder="Meeting, phone call, creative work, workout, meal..." rows="3" id="segmentText">${state.segment}</textarea><div class="inspiration">"Morning focus session" ... "Call with mom" ... "Writing time" ... "Gym" ...</div>`;
       else if (state.step === 1) html = `<div class="label label-segment">Step 2 of 6</div><div class="question">How am I feeling?</div><div class="slider-container"><div class="slider-labels"><span>-10</span><span class="slider-value-label" id="feelLabel" style="color:${getFeelingColor(state.feeling)}">${getFeelingLabel(state.feeling)}</span><span>+10</span></div><input type="range" min="-10" max="10" value="${state.feeling}" id="feelSlider"><div class="feeling-display" id="feelDisplay">${state.feeling > 0 ? '+' : ''}${state.feeling}</div></div>`;
-      else if (state.step === 2) html = `<div class="label label-segment">Step 3 of 6</div><div class="question">How does my inner being feel right now?</div><div class="hint">Select all that apply</div><div class="feelings-grid" id="innerGrid">${innerBeingFeelings.map(f => `<button class="btn btn-feeling ${state.innerBeingFeelings.includes(f) ? 'selected' : ''}" data-feeling="${f}">${f}</button>`).join('')}<button class="btn btn-feeling btn-other ${state.innerBeingFeelings.includes('custom') ? 'selected' : ''}" data-feeling="custom">+ Other</button></div>${state.innerBeingFeelings.includes('custom') ? `<input type="text" placeholder="Describe the feeling..." value="${state.customInnerFeeling}" id="customInnerIn">` : ''}${state.innerBeingFeelings.length ? `<div class="selected-display"><strong>Selected:</strong> ${getInnerFeelingLabels()}</div>` : ''}`;
+      else if (state.step === 2) html = `<div class="label label-segment">Step 3 of 6</div><div class="question">How does my inner being feel right now?</div><div class="hint">Tap Inner Being for pure alignment, or select feelings</div>
+        <div id="innerGrid">
+          <!-- Core Feelings -->
+          <div class="feelings-section">
+            <div class="feelings-section-label">Core Feelings</div>
+            <div class="feelings-core">
+              ${innerRingFeelings.map(f => `<button class="feeling-btn ${state.innerBeingFeelings.includes(f) ? 'selected' : ''}" data-feeling="${f}">${f}</button>`).join('')}
+            </div>
+          </div>
+          
+          <!-- Inner Being Sun -->
+          <div class="ib-center">
+            <div class="ib-sun ${state.innerBeingFeelings.includes('Inner Being') ? 'selected' : ''}" data-feeling="Inner Being">Inner<br>Being</div>
+          </div>
+          
+          <!-- More Feelings -->
+          <div class="feelings-section">
+            <div class="feelings-section-label">More Feelings</div>
+            <div class="feelings-more">
+              ${outerRingFeelings.map(f => `<button class="feeling-btn ${state.innerBeingFeelings.includes(f) ? 'selected' : ''}" data-feeling="${f}">${f}</button>`).join('')}
+              <button class="feeling-btn other ${state.innerBeingFeelings.includes('custom') ? 'selected' : ''}" data-feeling="custom">+ Other</button>
+            </div>
+          </div>
+        </div>
+        ${state.innerBeingFeelings.includes('custom') ? '<input type="text" placeholder="Describe the feeling..." value="' + state.customInnerFeeling + '" id="customInnerIn">' : ''}
+        ${state.innerBeingFeelings.length ? '<div class="selected-display"><strong>Selected:</strong> ' + getInnerFeelingLabels() + '</div>' : ''}`;
       else if (state.step === 3) html = `<div class="label label-segment">Step 4 of 6</div><div class="question">How can most of my attention gently rest here for the next 68 seconds?</div><div class="ib-slider-container"><div class="ib-slider-title">Inner Being Presence</div><div class="ib-slider-labels"><span>Starting to allow</span><span>Wide open</span></div><input type="range" class="ib-slider" min="0" max="100" value="${state.ibPresence}" id="ibSlider"><div class="ib-slider-value" id="ibValue">${state.ibPresence}%</div><div class="ib-slider-state" id="ibState">${getIBPresenceLabel(state.ibPresence)}</div></div><textarea placeholder="Your strategy..." rows="4" id="vibrationText">${state.stayWithVibration}</textarea><div class="inspiration">"Breathe and feel it" ... "Visualize it done" ... "Smile and relax" ... "Feel it in my body" ...</div>`;
       else if (state.step === 4) html = `<div class="label label-segment">Step 5 of 6</div><div class="question">Any insights?</div><textarea placeholder="What's coming through..." rows="4" id="insightsText">${state.insights}</textarea><div class="inspiration">"I'm already there" ... "This is who I am" ... "It's done" ...</div>`;
       else if (state.step === 5) html = `<div class="label label-segment">Step 6 of 6</div><div class="question">Where does this belong?</div><div class="hint">Select all that apply</div><div class="options-list" id="lifeGrid">${lifeAreas.map(a => `<button class="btn btn-life ${state.lifeAreas.includes(a.id) ? 'selected' : ''}" data-id="${a.id}"><span class="icon">${a.icon}</span><span>${a.label}</span></button>`).join('')}<button class="btn btn-life btn-other ${state.lifeAreas.includes('custom') ? 'selected' : ''}" data-id="custom"><span class="icon">+</span><span>Other</span></button></div>${state.lifeAreas.includes('custom') ? `<input type="text" placeholder="Name this life area..." value="${state.customLifeArea}" id="customLifeIn">` : ''}${state.lifeAreas.length ? `<div class="selected-display"><strong>Selected:</strong> ${getLifeLabels()}</div>` : ''}`;
@@ -366,7 +520,12 @@
       });
       document.getElementById('segmentText')?.addEventListener('input', e => { state.segment = e.target.value; document.getElementById('nextBtn').disabled = !canProceedSegment(); });
       document.getElementById('feelSlider')?.addEventListener('input', e => { state.feeling = +e.target.value; document.getElementById('feelDisplay').textContent = (state.feeling > 0 ? '+' : '') + state.feeling; document.getElementById('feelLabel').textContent = getFeelingLabel(state.feeling); document.getElementById('feelLabel').style.color = getFeelingColor(state.feeling); });
-      document.getElementById('innerGrid')?.addEventListener('click', e => { const btn = e.target.closest('.btn'); if (btn) { toggle(state.innerBeingFeelings, btn.dataset.feeling); render(); } });
+      document.getElementById('innerGrid')?.addEventListener('click', e => { 
+        const btn = e.target.closest('.feeling-btn'); 
+        const sun = e.target.closest('.ib-sun');
+        if (btn) { toggle(state.innerBeingFeelings, btn.dataset.feeling); render(); }
+        if (sun) { toggle(state.innerBeingFeelings, sun.dataset.feeling); render(); }
+      });
       document.getElementById('customInnerIn')?.addEventListener('input', e => { state.customInnerFeeling = e.target.value; document.getElementById('nextBtn').disabled = !canProceedSegment(); });
       document.getElementById('ibSlider')?.addEventListener('input', e => { state.ibPresence = +e.target.value; document.getElementById('ibValue').textContent = state.ibPresence + '%'; document.getElementById('ibState').textContent = getIBPresenceLabel(state.ibPresence); });
       document.getElementById('vibrationText')?.addEventListener('input', e => { state.stayWithVibration = e.target.value; });
